@@ -1,4 +1,6 @@
-package MSDSort;
+package main.java.edu.neu.coe.info6205.sorting.sorts;
+
+
 
 
 

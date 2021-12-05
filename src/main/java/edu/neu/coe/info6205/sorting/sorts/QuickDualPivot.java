@@ -1,4 +1,6 @@
-package MSDSort;
+package main.java.edu.neu.coe.info6205.sorting.sorts;
+
+
 
 /******************************************************************************
  *  Compilation:  javac QuickDualPivot.java
@@ -30,7 +32,7 @@ public class QuickDualPivot {
 
     // quicksort the array a[] using dual-pivot quicksort
     public static void sort(Comparable[] a) {
-       // StdRandom.shuffle(a);
+        // StdRandom.shuffle(a);
         sort(a, 0, a.length - 1);
         assert isSorted(a);
     }
