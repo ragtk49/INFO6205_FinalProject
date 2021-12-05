@@ -1,4 +1,4 @@
-package MSDSort;
+package main.java.edu.neu.coe.info6205.sorting.sorts;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -7,7 +7,7 @@ import java.util.List;
 
 public class FileUtil {
 
-    public static List<String> hindiWordsList(String fileName) throws IOException {
+    public static boolean hindiWordsList(String fileName) throws IOException {
         List<String> hindiWords = new ArrayList<>();
         FileReader fr = new FileReader(fileName);
         MSD msd=new MSD();
@@ -20,7 +20,7 @@ public class FileUtil {
             String line = br.readLine();
 
             while(line != null) {
-                System.out.println(line);
+                //System.out.println(line);
                 String[] names = line.split(",");
                 String word = extractName(names);
                 hindiWords.add(line);
@@ -35,21 +35,21 @@ public class FileUtil {
         hWords= hindiWords.toArray(hWords);
 
         //String[]
-        msd.sort(hWords);
-        System.out.println("MSD sorted:");
-        for(String s: hWords)
-            System.out.println(s + "  ");
-        System.out.println("----------------------------------------------");
+//        msd.sort(hWords);
+//        System.out.println("MSD sorted:");
+//        for(String s: hWords)
+//            System.out.println(s + "  ");
+//        System.out.println("----------------------------------------------");
         System.out.println("Dual pivot sorted");
         qdp.sort(hWords);
         for(String s: hWords)
             System.out.println(s + "  ");
         System.out.println("-----------------------------------------------");
-        System.out.println("LSD sorted");
-        lsd.sort(hWords);
+//        System.out.println("LSD sorted");
+//        lsd.sort(hWords);
         for(String s: hWords)
             System.out.println(s + "  ");
-        return hindiWords;
+        return true;
     }
 
     public static String extractName(String[] words){
@@ -58,7 +58,7 @@ public class FileUtil {
     }
 
     public static void main(String[] args) throws IOException {
-        System.out.println(hindiWordsList("C:\\Users\\gvrtk\\OneDrive\\Documents\\hindi.txt"));
+        System.out.println(hindiWordsList("D:\\hindiText.txt"));
 
     }
 }
