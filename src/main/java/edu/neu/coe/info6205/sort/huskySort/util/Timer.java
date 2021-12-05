@@ -1,6 +1,5 @@
-package edu.neu.coe.info6205.util;
+package edu.neu.coe.info6205.sort.huskySort.util;
 
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -54,26 +53,18 @@ public class Timer {
      * @return the average milliseconds per repetition.
      */
     public <T, U> double repeat(int n, Supplier<T> supplier, Function<T, U> function, UnaryOperator<T> preFunction, Consumer<U> postFunction) {
-        //logger.trace("repeat: with " + n + " runs");
-        // TO BE IMPLEMENTED: note that the timer is running when this method is called and should still be running when it returns.
-        for (int i = 0; i < n; i++) {
-        	//Pausing to pre process the T value
-            pause(); 
-            T t;
-            if (preFunction != null) t=preFunction.apply(supplier.get()); 
-            else t=supplier.get();
-            //Resuming to time the function
-            resume(); 
-            U u = function.apply(t); 
-            //running the functions once per "lap" and pausing to post process if postFunction is not null
-            pauseAndLap(); 
-            if (postFunction != null) { 
-                postFunction.accept(u);
-            }
-            resume(); 
-        }
+        if (n > 0) logger.trace("repeat: with " + n + " runs");
+        else logger.warn("repeat: zero runs");
         pause();
-        return meanLapTime(); 
+        for (int i = 0; i < n; i++) {
+            T t = supplier.get();
+            T t1 = preFunction != null ? preFunction.apply(t) : t;
+            resume();
+            U u = function.apply(t1);
+            pauseAndLap();
+            if (postFunction != null) postFunction.accept(u);
+        }
+        return meanLapTime();
     }
 
     /**
@@ -191,7 +182,6 @@ public class Timer {
      * @return the number of ticks for the system clock. Currently defined as nano time.
      */
     private static long getClock() {
-        // TO BE IMPLEMENTED
         return System.nanoTime();
     }
 
@@ -203,11 +193,10 @@ public class Timer {
      * @return the corresponding number of milliseconds.
      */
     private static double toMillisecs(long ticks) {
-        // TO BE IMPLEMENTED
-        return TimeUnit.MILLISECONDS.convert(ticks, TimeUnit.NANOSECONDS);
+        return ticks / 1e6;
     }
 
-    //final static LazyLogger logger = new LazyLogger(Timer.class);
+    final static LazyLogger logger = new LazyLogger(Timer.class);
 
     static class TimerException extends RuntimeException {
         public TimerException() {

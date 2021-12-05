@@ -1,4 +1,4 @@
-package main.java.edu.neu.coe.info6205.sorting.sorts;
+package edu.neu.coe.info6205.sort.counting;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ public class FileUtil {
     }
 
     public static void main(String[] args) throws IOException {
-        System.out.println(hindiWordsList("D:\\hindiText.txt"));
+        System.out.println(hindiWordsList("/Users/chandrakanthyadav/Downloads/hindiText.txt"));
 
     }
 }
