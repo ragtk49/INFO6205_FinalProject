@@ -1,9 +1,5 @@
 package edu.neu.coe.info6205.sort.counting;
 
-
-
-
-
 public class LSD {
 
     private final int ASCII_RANGE = 2560;
@@ -53,17 +49,23 @@ public class LSD {
             count[c + 2]++;
         }
 
-        // transform counts to indices
+        /**
+         * transform counts to indices 
+         */
         for (int r = 1; r < ASCII_RANGE + 2; r++)
             count[r] += count[r - 1];
 
-        // distribute
+        /**
+         * distribute
+         */
         for (int i = from; i <= to; i++) {
             int c = charAsciiVal(strArr[i], charPosition);
             result[count[c + 1]++] = strArr[i];
         }
 
-        // copy back
+        /**
+         * copy back 
+         */
         if (to + 1 - from >= 0) System.arraycopy(result, 0, strArr, from, to + 1 - from);
     }
 

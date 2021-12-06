@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.neu.coe.info6205.sort.counting.*;
+import edu.neu.coe.info6205.sort.counting.TimSort;
+import edu.neu.coe.info6205.sort.huskySort.sort.huskySort.MergeHuskySort;
+import edu.neu.coe.info6205.sort.huskySort.sort.huskySort.PureHuskySort;
 
 
 
@@ -152,92 +155,87 @@ public class Benchmark_Timer<T> implements Benchmark<T> {
     private final Consumer<T> fRun;
     private final Consumer<T> fPost;
     
-    public static void main(String[] args) {
-
-        System.out.println("Benchmarking the randomly ordered array for atleast 6 values of n");
+    public static void main(String[] args) throws IOException {
+        
+        final String[] hindiWords =FileUtil.hindiWordsList("/Users/chandrakanthyadav/Downloads/hindiText_250k.txt");
+        
+        /**
+         * Benchmarking of MSD
+         */
+        System.out.println("Benchmarking the randomly ordered array");
         System.out.println();
-        int randArrLen=5000;
         for(int i=200;i<=7000;i*=2) {
-        	int len = i;
-            //Filling the array with random numbers
-        	List<String> hindiWords = new ArrayList<>();
-            FileReader fr = null;
-            try {
-                fr = new FileReader("/Users/chandrakanthyadav/Downloads/hindiText.txt");
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            try (BufferedReader br = new BufferedReader(fr)) {
-
-                String line = br.readLine();
-
-                while (line != null) {
-                    //System.out.println(line);
-                    String[] names = line.split(",");
-                    String word = extractName(names);
-                    hindiWords.add(line);
-                    line = br.readLine();
-                }
-
-
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
-            }
-            String[] hWords = new String[hindiWords.size()];
-            hWords = hindiWords.toArray(hWords);
-            final String[] h=hWords;
-            MSD insertionSort=new MSD();
+            MSD msd=new MSD();
             Consumer<String[]> consumer = (ar) -> {
-            	insertionSort.sort(h);
+            	msd.sort(hindiWords);
             };
-            consumer.accept(hWords);
-            Benchmark_Timer<String[]> benchmarkTimer = new Benchmark_Timer<>("Benchmarking sort(Insertion) function for array with random elements of length : " + randArrLen, consumer);
-            System.out.println("Time : "+benchmarkTimer.run(hWords, 1));
+            consumer.accept(hindiWords);
+            Benchmark_Timer<String[]> benchmarkTimer = new Benchmark_Timer<>("Benchmarking sort(Insertion) function for array with random elements of length : " + hindiWords.length, consumer);
+            System.out.println("Time : "+benchmarkTimer.run(hindiWords, 1));
+            
+        }
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------------");
+        System.out.println("Benchmarking the reverse ordered array");
+        System.out.println();
+        for(int i=200;i<=7000;i*=2) {
+        	Collections.sort(Arrays.asList(hindiWords));
+        	Collections.reverse(Arrays.asList(hindiWords));
+        	MSD msd=new MSD();
+        	Consumer<String[]> consumer = (ar) -> {
+            	msd.sort(hindiWords);
+            };
+            consumer.accept(hindiWords);
+            Benchmark_Timer<String[]> benchmarkTimer = new Benchmark_Timer<>("Benchmarking sort(Insertion) function for array with random elements of length : " + hindiWords.length, consumer);
+            System.out.println("Time : "+benchmarkTimer.run(hindiWords, 1));
+            
+        }
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------------");
+        
+        System.out.println("Benchmarking the partially ordered array ");
+        System.out.println();
+        for(int i=200;i<=7000;i*=2) {
+        	List<String> wordsList=getPOrdered(Arrays.asList(hindiWords));
+        	String[] wordsArr=(String[]) wordsList.toArray();
+        	MSD msd=new MSD();
+            Consumer<String[]> consumer = (ar) -> {
+            	msd.sort(wordsArr);
+            };
+            consumer.accept(wordsArr);
+            Benchmark_Timer<String[]> benchmarkTimer = new Benchmark_Timer<>("Benchmarking sort(Insertion) function for array with random elements of length : " + wordsArr.length, consumer);
+            System.out.println("Time : "+benchmarkTimer.run(wordsArr, 1));
             
         }
         System.out.println("----------------------------------------------------------------------------------------------------------------------------------");
         
         
-        System.out.println("Benchmarking the reverse ordered array for atleast 6 values of n");
+        /**
+         * Benchmarking of LSD
+         */
+        System.out.println("Benchmarking the randomly ordered array");
         System.out.println();
         for(int i=200;i<=7000;i*=2) {
-        	int len = i;
-            //Filling the array with random numbers
-        	List<String> hindiWords = new ArrayList<>();
-            FileReader fr = null;
-            try {
-                fr = new FileReader("/Users/chandrakanthyadav/Downloads/hindiText.txt");
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            try (BufferedReader br = new BufferedReader(fr)) {
-
-                String line = br.readLine();
-
-                while (line != null) {
-                    //System.out.println(line);
-                    String[] names = line.split(",");
-                    String word = extractName(names);
-                    hindiWords.add(line);
-                    line = br.readLine();
-                }
-
-
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
-            }
-            String[] hWords = new String[hindiWords.size()];
-            Collections.sort(hindiWords);
-            Collections.reverse(hindiWords);
-            hWords = hindiWords.toArray(hWords);
-            final String[] h=hWords;
-            MSD insertionSort=new MSD();
+            LSD lsd=new LSD();
             Consumer<String[]> consumer = (ar) -> {
-            	insertionSort.sort(h);
+            	lsd.sort(hindiWords);
             };
-            consumer.accept(hWords);
-            Benchmark_Timer<String[]> benchmarkTimer = new Benchmark_Timer<>("Benchmarking sort(Insertion) function for array with random elements of length : " + randArrLen, consumer);
-            System.out.println("Time : "+benchmarkTimer.run(hWords, 1));
+            consumer.accept(hindiWords);
+            Benchmark_Timer<String[]> benchmarkTimer = new Benchmark_Timer<>("Benchmarking sort(Insertion) function for array with random elements of length : " + hindiWords.length, consumer);
+            System.out.println("Time : "+benchmarkTimer.run(hindiWords, 1));
+            
+        }
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------------");
+        System.out.println("Benchmarking the reverse ordered array");
+        System.out.println();
+        for(int i=200;i<=7000;i*=2) {
+        	Collections.sort(Arrays.asList(hindiWords));
+        	Collections.reverse(Arrays.asList(hindiWords));
+        	LSD lsd=new LSD();
+        	Consumer<String[]> consumer = (ar) -> {
+            	lsd.sort(hindiWords);
+            };
+            consumer.accept(hindiWords);
+            Benchmark_Timer<String[]> benchmarkTimer = new Benchmark_Timer<>("Benchmarking sort(Insertion) function for array with random elements of length : " + hindiWords.length, consumer);
+            System.out.println("Time : "+benchmarkTimer.run(hindiWords, 1));
             
         }
         System.out.println("----------------------------------------------------------------------------------------------------------------------------------");
@@ -245,42 +243,191 @@ public class Benchmark_Timer<T> implements Benchmark<T> {
         System.out.println("Benchmarking the partially ordered array for atleast 6 values of n");
         System.out.println();
         for(int i=200;i<=7000;i*=2) {
-        	int len = i;
-            //Filling the array with random numbers
-        	List<String> hindiWords = new ArrayList<>();
-            FileReader fr = null;
-            try {
-                fr = new FileReader("/Users/chandrakanthyadav/Downloads/hindiText.txt");
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            try (BufferedReader br = new BufferedReader(fr)) {
-
-                String line = br.readLine();
-
-                while (line != null) {
-                    //System.out.println(line);
-                    String[] names = line.split(",");
-                    String word = extractName(names);
-                    hindiWords.add(line);
-                    line = br.readLine();
-                }
-
-
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
-            }
-            List<String> pHindiWords=getPOrdered(hindiWords);
-            String[] hWords = new String[pHindiWords.size()];
-            hWords = pHindiWords.toArray(hWords);
-            final String[] h=hWords;
-            MSD insertionSort=new MSD();
+        	List<String> wordsList=getPOrdered(Arrays.asList(hindiWords));
+        	String[] wordsArr=(String[]) wordsList.toArray();
+        	LSD lsd=new LSD();
             Consumer<String[]> consumer = (ar) -> {
-            	insertionSort.sort(h);
+            	lsd.sort(wordsArr);
             };
-            consumer.accept(hWords);
-            Benchmark_Timer<String[]> benchmarkTimer = new Benchmark_Timer<>("Benchmarking sort(Insertion) function for array with random elements of length : " + randArrLen, consumer);
-            System.out.println("Time : "+benchmarkTimer.run(hWords, 1));
+            consumer.accept(wordsArr);
+            Benchmark_Timer<String[]> benchmarkTimer = new Benchmark_Timer<>("Benchmarking sort(Insertion) function for array with random elements of length : " + wordsArr.length, consumer);
+            System.out.println("Time : "+benchmarkTimer.run(wordsArr, 1));
+            
+        }
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------------");
+        
+        /**
+         * Benchmarking of Quick Dual Pivot
+         */
+        System.out.println("Benchmarking the randomly ordered array");
+        System.out.println();
+        for(int i=200;i<=7000;i*=2) {
+            Consumer<String[]> consumer = (ar) -> {
+            	QuickDualPivot.sort(hindiWords);
+            };
+            consumer.accept(hindiWords);
+            Benchmark_Timer<String[]> benchmarkTimer = new Benchmark_Timer<>("Benchmarking sort(Insertion) function for array with random elements of length : " + hindiWords.length, consumer);
+            System.out.println("Time : "+benchmarkTimer.run(hindiWords, 1));
+            
+        }
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------------");
+        System.out.println("Benchmarking the reverse ordered array");
+        System.out.println();
+        for(int i=200;i<=7000;i*=2) {
+        	Collections.sort(Arrays.asList(hindiWords));
+        	Collections.reverse(Arrays.asList(hindiWords));
+        	Consumer<String[]> consumer = (ar) -> {
+        		QuickDualPivot.sort(hindiWords);
+            };
+            consumer.accept(hindiWords);
+            Benchmark_Timer<String[]> benchmarkTimer = new Benchmark_Timer<>("Benchmarking sort(Insertion) function for array with random elements of length : " + hindiWords.length, consumer);
+            System.out.println("Time : "+benchmarkTimer.run(hindiWords, 1));
+            
+        }
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------------");
+        
+        System.out.println("Benchmarking the partially ordered array for atleast 6 values of n");
+        System.out.println();
+        for(int i=200;i<=7000;i*=2) {
+        	List<String> wordsList=getPOrdered(Arrays.asList(hindiWords));
+        	String[] wordsArr=(String[]) wordsList.toArray();
+            Consumer<String[]> consumer = (ar) -> {
+            	QuickDualPivot.sort(wordsArr);
+            };
+            consumer.accept(wordsArr);
+            Benchmark_Timer<String[]> benchmarkTimer = new Benchmark_Timer<>("Benchmarking sort(Insertion) function for array with random elements of length : " + wordsArr.length, consumer);
+            System.out.println("Time : "+benchmarkTimer.run(wordsArr, 1));
+            
+        }
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------------");
+        
+        
+        /**
+         * Benchmarking Husky Sort
+         */
+        System.out.println("Benchmarking the randomly ordered array");
+        System.out.println();
+        for(int i=200;i<=7000;i*=2) {
+        	HuskySortImplementation hsp=new HuskySortImplementation();
+            Consumer<String[]> consumer = (ar) -> {
+            	hsp.mergeSort(hindiWords);
+            };
+            consumer.accept(hindiWords);
+            Benchmark_Timer<String[]> benchmarkTimer = new Benchmark_Timer<>("Benchmarking sort(Insertion) function for array with random elements of length : " + hindiWords.length, consumer);
+            System.out.println("Time : "+benchmarkTimer.run(hindiWords, 1));
+            
+        }
+        for(int i=200;i<=7000;i*=2) {
+        	HuskySortImplementation hsp=new HuskySortImplementation();
+            Consumer<String[]> consumer = (ar) -> {
+            	hsp.pureSort(hindiWords);
+            };
+            consumer.accept(hindiWords);
+            Benchmark_Timer<String[]> benchmarkTimer = new Benchmark_Timer<>("Benchmarking sort(Insertion) function for array with random elements of length : " + hindiWords.length, consumer);
+            System.out.println("Time : "+benchmarkTimer.run(hindiWords, 1));
+            
+        }
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------------");
+        System.out.println("Benchmarking the reverse ordered array");
+        System.out.println();
+        for(int i=200;i<=7000;i*=2) {
+        	Collections.sort(Arrays.asList(hindiWords));
+        	Collections.reverse(Arrays.asList(hindiWords));
+        	HuskySortImplementation hsp=new HuskySortImplementation();
+        	Consumer<String[]> consumer = (ar) -> {
+        		hsp.mergeSort(hindiWords);
+            };
+            consumer.accept(hindiWords);
+            Benchmark_Timer<String[]> benchmarkTimer = new Benchmark_Timer<>("Benchmarking sort(Insertion) function for array with random elements of length : " + hindiWords.length, consumer);
+            System.out.println("Time : "+benchmarkTimer.run(hindiWords, 1));
+            
+        }
+        for(int i=200;i<=7000;i*=2) {
+        	Collections.sort(Arrays.asList(hindiWords));
+        	Collections.reverse(Arrays.asList(hindiWords));
+        	HuskySortImplementation hsp=new HuskySortImplementation();
+        	Consumer<String[]> consumer = (ar) -> {
+        		hsp.pureSort(hindiWords);
+            };
+            consumer.accept(hindiWords);
+            Benchmark_Timer<String[]> benchmarkTimer = new Benchmark_Timer<>("Benchmarking sort(Insertion) function for array with random elements of length : " + hindiWords.length, consumer);
+            System.out.println("Time : "+benchmarkTimer.run(hindiWords, 1));
+            
+        }
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------------");
+        
+        System.out.println("Benchmarking the partially ordered array for atleast 6 values of n");
+        System.out.println();
+        for(int i=200;i<=7000;i*=2) {
+        	List<String> wordsList=getPOrdered(Arrays.asList(hindiWords));
+        	String[] wordsArr=(String[]) wordsList.toArray();
+        	HuskySortImplementation hsp=new HuskySortImplementation();
+            Consumer<String[]> consumer = (ar) -> {
+            	hsp.mergeSort(wordsArr);
+            };
+            consumer.accept(wordsArr);
+            Benchmark_Timer<String[]> benchmarkTimer = new Benchmark_Timer<>("Benchmarking sort(Insertion) function for array with random elements of length : " + wordsArr.length, consumer);
+            System.out.println("Time : "+benchmarkTimer.run(wordsArr, 1));
+            
+        }
+        for(int i=200;i<=7000;i*=2) {
+        	List<String> wordsList=getPOrdered(Arrays.asList(hindiWords));
+        	String[] wordsArr=(String[]) wordsList.toArray();
+        	HuskySortImplementation hsp=new HuskySortImplementation();
+            Consumer<String[]> consumer = (ar) -> {
+            	hsp.pureSort(wordsArr);
+            };
+            consumer.accept(wordsArr);
+            Benchmark_Timer<String[]> benchmarkTimer = new Benchmark_Timer<>("Benchmarking sort(Insertion) function for array with random elements of length : " + wordsArr.length, consumer);
+            System.out.println("Time : "+benchmarkTimer.run(wordsArr, 1));
+            
+        }
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------------");
+        
+        /**
+         * Benchmarking Tim Sort
+         */
+        System.out.println("Benchmarking the randomly ordered array");
+        System.out.println();
+        for(int i=200;i<=7000;i*=2) {
+            TimSort ts=new TimSort();
+            Consumer<String[]> consumer = (ar) -> {
+            	ts.sort(hindiWords);
+            };
+            consumer.accept(hindiWords);
+            Benchmark_Timer<String[]> benchmarkTimer = new Benchmark_Timer<>("Benchmarking sort(Insertion) function for array with random elements of length : " + hindiWords.length, consumer);
+            System.out.println("Time : "+benchmarkTimer.run(hindiWords, 1));
+            
+        }
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------------");
+        System.out.println("Benchmarking the reverse ordered array");
+        System.out.println();
+        for(int i=200;i<=7000;i*=2) {
+        	Collections.sort(Arrays.asList(hindiWords));
+        	Collections.reverse(Arrays.asList(hindiWords));
+        	TimSort ts=new TimSort();
+        	Consumer<String[]> consumer = (ar) -> {
+        		ts.sort(hindiWords);
+            };
+            consumer.accept(hindiWords);
+            Benchmark_Timer<String[]> benchmarkTimer = new Benchmark_Timer<>("Benchmarking sort(Insertion) function for array with random elements of length : " + hindiWords.length, consumer);
+            System.out.println("Time : "+benchmarkTimer.run(hindiWords, 1));
+            
+        }
+        System.out.println("----------------------------------------------------------------------------------------------------------------------------------");
+        
+        System.out.println("Benchmarking the partially ordered array");
+        System.out.println();
+        for(int i=200;i<=7000;i*=2) {
+        	List<String> wordsList=getPOrdered(Arrays.asList(hindiWords));
+        	String[] wordsArr=(String[]) wordsList.toArray();
+        	TimSort ts=new TimSort();
+            Consumer<String[]> consumer = (ar) -> {
+            	ts.sort(wordsArr);
+            };
+            consumer.accept(wordsArr);
+            Benchmark_Timer<String[]> benchmarkTimer = new Benchmark_Timer<>("Benchmarking sort(Insertion) function for array with random elements of length : " + wordsArr.length, consumer);
+            System.out.println("Time : "+benchmarkTimer.run(wordsArr, 1));
             
         }
         System.out.println("----------------------------------------------------------------------------------------------------------------------------------");

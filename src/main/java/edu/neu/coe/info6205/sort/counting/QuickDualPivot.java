@@ -1,7 +1,5 @@
 package edu.neu.coe.info6205.sort.counting;
 
-
-
 /******************************************************************************
  *  Compilation:  javac QuickDualPivot.java
  *  Execution:    java QuickDualPivot < input.txt
@@ -29,19 +27,27 @@ package edu.neu.coe.info6205.sort.counting;
  ******************************************************************************/
 
 public class QuickDualPivot {
+	
+	private static final int CUTOFF = 100000; 
 
-    // quicksort the array a[] using dual-pivot quicksort
+	/**
+	 * quicksort the array a[] using dual-pivot quicksort
+	 * @param a
+	 */
     public static void sort(Comparable[] a) {
-        // StdRandom.shuffle(a);
         sort(a, 0, a.length - 1);
         assert isSorted(a);
     }
 
-    // quicksort the subarray a[lo .. hi] using dual-pivot quicksort
+    /**
+     * quicksort the subarray a[lo .. hi] using dual-pivot quicksort 
+     * @param a array in context
+     * @param lo is the pointer that points to lo index
+     * @param hi is the pointer that points to hi index
+     */
     private static void sort(Comparable[] a, int lo, int hi) {
-        if (hi <= lo) return;
+        if (lo >= hi) return;
 
-        // make sure a[lo] <= a[hi]
         if (less(a[hi], a[lo])) exch(a, lo, hi);
 
         int lt = lo + 1, gt = hi - 1;
@@ -54,7 +60,9 @@ public class QuickDualPivot {
         exch(a, lo, --lt);
         exch(a, hi, ++gt);
 
-        // recursively sort three subarrays
+        /**
+         * recursively sort three subarrays
+         */
         sort(a, lo, lt-1);
         if (less(a[lt], a[gt])) sort(a, lt+1, gt-1);
         sort(a, gt+1, hi);
@@ -62,18 +70,26 @@ public class QuickDualPivot {
         assert isSorted(a, lo, hi);
     }
 
-
-
     /***************************************************************************
      *  Helper sorting functions.
      ***************************************************************************/
 
-    // is v < w ?
+    /**
+     * is v < w ? 
+     * @param v
+     * @param w
+     * @return
+     */
     private static boolean less(Comparable v, Comparable w) {
         return v.compareTo(w) < 0;
     }
 
-    // exchange a[i] and a[j]
+    /**
+     * exchange a[i] and a[j]
+     * @param a array in context
+     * @param i ith element's index to be exchanged
+     * @param j jth element's index to be exchanged
+     */
     private static void exch(Object[] a, int i, int j) {
         Object swap = a[i];
         a[i] = a[j];
@@ -93,20 +109,14 @@ public class QuickDualPivot {
         return true;
     }
 
-
-
-    // print array to standard output
+    /**
+     * print array to standard output
+     * @param a array in context
+     */
     private static void show(Comparable[] a) {
         for (int i = 0; i < a.length; i++) {
             //StdOut.println(a[i]);
         }
-    }
-
-    // Read strings from standard input, sort them, and print.
-    public static void main(String[] args) {
-//        //String[] a = StdIn.readAllStrings();
-//        QuickDualPivot.sort(a);
-//        show(a);
     }
 
 }

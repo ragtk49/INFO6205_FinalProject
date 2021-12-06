@@ -3,17 +3,16 @@ package edu.neu.coe.info6205.sort.counting;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.*;
 
+import edu.neu.coe.info6205.sort.huskySort.sort.huskySort.PureHuskySort;
+
+import java.util.*;
 
 public class FileUtil {
 
-    public static boolean hindiWordsList(String fileName) throws IOException {
+    public static String[] hindiWordsList(String fileName) throws IOException {
         List<String> hindiWords = new ArrayList<>();
         FileReader fr = new FileReader(fileName);
-        MSD msd=new MSD();
-        QuickDualPivot qdp = new QuickDualPivot();
-        LSD lsd = new LSD();
 
 
         try (BufferedReader br = new BufferedReader(fr)) {
@@ -21,7 +20,6 @@ public class FileUtil {
             String line = br.readLine();
 
             while(line != null) {
-                //System.out.println(line);
                 String[] names = line.split(",");
                 String word = extractName(names);
                 hindiWords.add(line);
@@ -34,24 +32,7 @@ public class FileUtil {
         }
         String[] hWords=new String[hindiWords.size()];
         hWords= hindiWords.toArray(hWords);
-
-        //String[]
-//        msd.sort(hWords);
-//        System.out.println("MSD sorted:");
-//        for(String s: hWords)
-//            System.out.println(s + "  ");
-//        System.out.println("----------------------------------------------");
-        System.out.println("Dual pivot sorted");
-//        qdp.sort(hWords);
-        Arrays.sort(hWords);
-        for(String s: hWords)
-            System.out.println(s + "  ");
-        System.out.println("-----------------------------------------------");
-//        System.out.println("LSD sorted");
-//        lsd.sort(hWords);
-//        for(String s: hWords)
-//            System.out.println(s + "  ");
-        return true;
+        return hWords;
     }
 
     public static String extractName(String[] words){
