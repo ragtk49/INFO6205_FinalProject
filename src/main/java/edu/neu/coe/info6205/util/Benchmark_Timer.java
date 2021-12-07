@@ -157,7 +157,7 @@ public class Benchmark_Timer<T> implements Benchmark<T> {
     
     public static void main(String[] args) throws IOException {
         
-        final String[] hindiWords =FileUtil.hindiWordsList("/Users/chandrakanthyadav/Downloads/hindiText_250k.txt");
+        final String[] hindiWords =FileUtil.hindiWordsList("C:\\Users\\gvrtk\\OneDrive\\Documents\\hindiText_200.txt");
         
         /**
          * Benchmarking of MSD
